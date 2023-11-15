@@ -1,0 +1,1 @@
+Isi folder ini untuk <b>page</b> saja karena terhubung langsung dengan routing
