@@ -1,0 +1,1 @@
+Types pada typescript bisa ditaruh disini
