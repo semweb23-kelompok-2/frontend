@@ -1,7 +1,14 @@
-import { Text } from "@chakra-ui/react";
+import { MainLayout } from "@/components/layout";
+import { Box } from "@chakra-ui/react";
 
 function Search() {
-  return <Text>Search result Page</Text>;
+  return (
+    <MainLayout>
+      <Box bg="red" m="auto" w="max-content">
+        Search result page
+      </Box>
+    </MainLayout>
+  );
 }
 
 export default Search;
