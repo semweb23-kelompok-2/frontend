@@ -3,6 +3,7 @@ import { Image, Img, Flex, Heading } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { axiosGet } from "@/utils/axios";
 import { MainLayout } from "@/components/layout";
+import { AxiosResponse } from "axios";
 
 export default function Home() {
   const [hello, setHello] = useState<any[]>([]);
@@ -13,7 +14,7 @@ export default function Home() {
       params: {
         page: 2,
       },
-    }).then((res) => {
+    }).then((res: AxiosResponse) => {
       setHello(res.data);
     });
   }, []);
@@ -41,7 +42,7 @@ export default function Home() {
         <Flex w="full" flexWrap="wrap" gap="2">
           {hello.length > 0 &&
             hello.map((image: any) => (
-              <Image
+              <Img
                 key={image.download_url}
                 alt={`Author: ${image.author}`}
                 src={image.download_url}
