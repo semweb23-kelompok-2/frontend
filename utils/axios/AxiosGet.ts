@@ -1,8 +1,8 @@
 import axios, { AxiosInstance } from "axios";
 
-const AxiosGet: AxiosInstance = axios.create({
+const axiosGet: AxiosInstance = axios.create({
   method: "GET",
-  baseURL: process.env.BACKEND_URL,
+  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
 });
 
-export default AxiosGet;
+export default axiosGet;

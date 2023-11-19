@@ -1,8 +1,11 @@
 import axios, { AxiosInstance } from "axios";
 
-const AxiosPost: AxiosInstance = axios.create({
+const axiosPost: AxiosInstance = axios.create({
   method: "POST",
-  baseURL: process.env.BACKEND_URL,
+  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
-export default AxiosPost;
+export default axiosPost;

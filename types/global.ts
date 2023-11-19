@@ -1,3 +1,5 @@
-interface passableComponentProps {
-  children: React.ReactNode;
+import { BoxProps } from "@chakra-ui/react";
+
+export interface mainLayoutProps extends BoxProps {
+  title: string;
 }

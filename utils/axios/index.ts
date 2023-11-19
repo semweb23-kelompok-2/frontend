@@ -1,6 +1,6 @@
-import AxiosDelete from "./AxiosDelete"
-import AxiosGet from "./AxiosGet";
-import AxiosPost from "./AxiosPost";
-import AxiosPut from "./AxiosPut";
+import axiosDelete from "./axiosDelete"
+import axiosGet from "./axiosGet";
+import axiosPost from "./axiosPost";
+import axiosPut from "./axiosPut";
 
-export { AxiosDelete, AxiosGet, AxiosPost, AxiosPut };
+export { axiosDelete, axiosGet, axiosPost, axiosPut };

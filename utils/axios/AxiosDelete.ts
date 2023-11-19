@@ -1,8 +1,8 @@
 import axios, { AxiosInstance } from "axios";
 
-const AxiosDelete: AxiosInstance = axios.create({
+const axiosDelete: AxiosInstance = axios.create({
   method: "DELETE",
-  baseURL: process.env.BACKEND_URL,
+  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
 });
 
-export default AxiosDelete;
+export default axiosDelete;

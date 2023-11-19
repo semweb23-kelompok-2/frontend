@@ -1,8 +1,8 @@
 import axios, { AxiosInstance } from "axios";
 
-const AxiosPut: AxiosInstance = axios.create({
+const axiosPut: AxiosInstance = axios.create({
   method: "PUT",
-  baseURL: process.env.BACKEND_URL,
+  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
 });
 
-export default AxiosPut;
+export default axiosPut;
