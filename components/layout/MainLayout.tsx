@@ -1,5 +1,5 @@
 import { mainLayoutProps } from "@/types/global";
-import { Box } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import Head from "next/head";
 import { ReactNode } from "react";
 
@@ -9,9 +9,14 @@ function MainLayout(props: mainLayoutProps): ReactNode {
       <Head>
         <title>{props.title ?? "KukusanFinder"}</title>
       </Head>
-      <Box {...props} p="4" minH="100vh">
+      <Flex
+        p="4"
+        minH="100vh"
+        bg="linear-gradient(122deg, #121B30 6.7%, #0D3449 89.76%)"
+        {...props}
+      >
         {props.children}
-      </Box>
+      </Flex>
     </>
   );
 }

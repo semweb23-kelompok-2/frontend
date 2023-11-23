@@ -1,57 +1,65 @@
-import { default as NextImage } from "next/image";
-import { Image, Img, Flex, Heading } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { axiosGet } from "@/utils/axios";
+import {
+  Flex,
+  Heading,
+  Box,
+  Text,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Button,
+} from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
+import { LegacyRef, useRef } from "react";
 import { MainLayout } from "@/components/layout";
-import { AxiosResponse } from "axios";
+import { useRouter } from "next/router";
 
 export default function Home() {
-  const [hello, setHello] = useState<any[]>([]);
+  const router = useRouter();
+  const inputRef = useRef<HTMLInputElement>();
 
-  useEffect(() => {
-    axiosGet({
-      url: `/v2/list`,
-      params: {
-        page: 2,
-      },
-    }).then((res: AxiosResponse) => {
-      setHello(res.data);
-    });
-  }, []);
+  function handleClick() {
+    if (inputRef && inputRef.current) {
+      router.push(`/search?q=${inputRef.current.value}`);
+    }
+  }
 
   return (
-    <MainLayout title="KukusanFinder - Find">
-      <NextImage
-        key="Test from steamcdn"
-        alt="Test"
-        src="https://steamcdn-a.akamaihd.net/steam/apps/500580/page_bg_generated_v6b.jpg?t=1478753158"
-        layout="fill"
-        objectFit="cover"
-      />
+    <MainLayout
+      title="KukusanFinder - Find"
+      color="white"
+      justifyContent="center"
+      alignItems="center"
+    >
       <Flex
-        w="full"
-        bg="white"
-        position="relative"
+        w={{ base: "90vw", md: "75vw" }}
         flexDirection="column"
-        p="2"
+        gap="6"
+        alignItems="center"
       >
-        <Heading py="2">
-          List of Unsplash Images <br />
-          Testing the New Next.js 14 Images Handling
-        </Heading>
-        <Flex w="full" flexWrap="wrap" gap="2">
-          {hello.length > 0 &&
-            hello.map((image: any) => (
-              <Img
-                key={image.download_url}
-                alt={`Author: ${image.author}`}
-                src={image.download_url}
-                width={400}
-                aspectRatio="auto"
-                objectFit="cover"
-              />
-            ))}
-        </Flex>
+        <Box m="auto">
+          <Heading textAlign="center" mb="2">
+            Kukusan
+            <Box as="span" color="blue.700">
+              Finder
+            </Box>
+          </Heading>
+          <Text textAlign="center">
+            Cari game yang tersedia dalam katalog Steam disini
+          </Text>
+        </Box>
+        <InputGroup>
+          <Input
+            ref={inputRef as LegacyRef<HTMLInputElement>}
+            type="text"
+            placeholder="Cari berdasarkan judul"
+          />
+          <InputRightElement mr="2">
+            <Icon icon="material-symbols:search" width="24" height="24" />
+          </InputRightElement>
+        </InputGroup>
+        <Button w="max-content" px="12" onClick={handleClick}>
+          Cari Game
+        </Button>
       </Flex>
     </MainLayout>
   );
