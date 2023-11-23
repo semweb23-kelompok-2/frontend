@@ -7,6 +7,7 @@ import {
   InputGroup,
   InputRightElement,
   Button,
+  useToast,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { LegacyRef, useRef } from "react";
@@ -14,12 +15,22 @@ import { MainLayout } from "@/components/layout";
 import { useRouter } from "next/router";
 
 export default function Home() {
+  const toast = useToast();
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>();
 
   function handleClick() {
     if (inputRef && inputRef.current) {
-      router.push(`/search?q=${inputRef.current.value}`);
+      if (inputRef.current.value)
+        router.push(`/search?q=${inputRef.current.value}`);
+      else if (!toast.isActive("toast"))
+        toast({
+          id: "toast",
+          title: "Masukkan input terlebih dahulu",
+          status: "error",
+          position: "top",
+          duration: 5000,
+        });
     }
   }
 
