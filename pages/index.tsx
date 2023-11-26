@@ -7,7 +7,7 @@ import {
   InputGroup,
   InputRightElement,
   Button,
-  useToast,
+  useToast
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { LegacyRef, useRef } from "react";
@@ -62,13 +62,14 @@ export default function Home() {
             Cari game yang tersedia dalam katalog Steam disini
           </Text>
         </Box>
-        <InputGroup>
+        <InputGroup maxW="640px" alignItems="center">
           <Input
             ref={inputRef as LegacyRef<HTMLInputElement>}
             type="text"
             placeholder="Cari berdasarkan judul"
+            py="6"
           />
-          <InputRightElement>
+          <InputRightElement mt="1" mr='1'>
             <Icon icon="material-symbols:search" width="24" height="24" />
           </InputRightElement>
         </InputGroup>
