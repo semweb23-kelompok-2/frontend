@@ -1,6 +1,8 @@
-import { Text, Flex, Heading, Img } from "@chakra-ui/react";
+import { Text, Flex, Heading, Img, Box } from "@chakra-ui/react";
 import { MainLayout } from "@/components/layout";
 import { BoxedText, TextWithHeading, TextWithIcon } from "@/components/text";
+import { Player, BigPlayButton } from "video-react";
+import "node_modules/video-react/dist/video-react.css";
 
 function Detail() {
   const bgImg: string =
@@ -8,8 +10,10 @@ function Detail() {
   const headerImg: string =
     "https://steamcdn-a.akamaihd.net/steam/apps/24960/header.jpg?t=1447352806";
 
+  const video: string =
+    "https://cdn.akamai.steamstatic.com/steam/apps/80467/movie480.webm?t=1591894384";
+
   const imgs: string[] = [
-    "https://cdn.akamai.steamstatic.com/steam/apps/80467/movie480.webm?t=1591894384",
     "https://cdn.akamai.steamstatic.com/steam/apps/24960/ss_ae0308877700b0339f7ee8e41bcc03656861d35d.1920x1080.jpg?t=1682701509",
     "https://cdn.akamai.steamstatic.com/steam/apps/24960/ss_b8af772596e0093da432d9774a2b904e3955c631.1920x1080.jpg?t=1682701509",
     "https://cdn.akamai.steamstatic.com/steam/apps/24960/ss_6692ebaff0e5a0786db7483c834ca879ebcaa09f.600x338.jpg?t=1682701509",
@@ -19,6 +23,18 @@ function Detail() {
     "https://cdn.akamai.steamstatic.com/steam/apps/24960/ss_2abc532120ae0f8fb354cd38b362b1c1c3165b66.600x338.jpg?t=1682701509",
     "https://cdn.akamai.steamstatic.com/steam/apps/24960/ss_62f25fb704fcb28c85f66ce30c4c007214342395.600x338.jpg?t=1682701509",
   ];
+
+  const contentScrollStyle = {
+    "&::-webkit-scrollbar": {
+      height: "4px",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      background: "white",
+      backgroundClip: "content-box",
+      borderRadius: "24px",
+    },
+  };
+
   return (
     <MainLayout
       title="KukusanFinder - Detail"
@@ -86,8 +102,15 @@ function Detail() {
         cursus aliquam a sociis neque lacinia. Suspendisse fermentum et sagittis
         sollicitudin aliquet facilisis.
       </Text>
-      <Flex>
-        <Text>Images & Videos</Text>
+
+      <Player src={video}>
+        <BigPlayButton position="center" />
+      </Player>
+
+      <Flex pb="2" gap="4" overflowX="auto" css={contentScrollStyle}>
+        {imgs.map((img: string) => (
+          <Img key={img} src={img} w="360px" />
+        ))}
       </Flex>
       <Flex justifyContent="space-between" gap="32">
         <TextWithHeading
@@ -130,12 +153,12 @@ function Detail() {
           enim in ridiculus ultricies facilisis.
         </TextWithHeading>
       </Flex>
-      <Flex justifyContent="space-between">
+      <Flex flexDirection="column" gap="4">
         <TextWithHeading isSwap heading="Support email :" gap="2">
           eki@semweb.com
         </TextWithHeading>
-        <TextWithHeading isSwap heading="Support link :" gap="2">
-          https://www.kukusan-finder.netlify.com
+        <TextWithHeading isUrl isSwap heading="Support link :" gap="2">
+          https://kukusan-finder.netlify.app
         </TextWithHeading>
       </Flex>
     </MainLayout>
