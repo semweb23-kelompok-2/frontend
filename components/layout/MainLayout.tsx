@@ -1,7 +1,10 @@
-import { mainLayoutProps } from "@/types/global";
-import { Flex } from "@chakra-ui/react";
+import { Flex, BoxProps } from "@chakra-ui/react";
 import Head from "next/head";
 import { ReactNode } from "react";
+
+export interface mainLayoutProps extends BoxProps {
+  title: string;
+}
 
 function MainLayout(props: mainLayoutProps): ReactNode {
   return (

@@ -19,7 +19,7 @@ export default function Home() {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>();
 
-  function handleClick() {
+  function handleClickSearch() {
     if (inputRef && inputRef.current) {
       if (inputRef.current.value)
         router.push(`/search?q=${inputRef.current.value}`);
@@ -32,6 +32,10 @@ export default function Home() {
           duration: 5000,
         });
     }
+  }
+
+  function handleClickAll() {
+    router.push(`/search?type=all`);
   }
 
   return (
@@ -64,13 +68,23 @@ export default function Home() {
             type="text"
             placeholder="Cari berdasarkan judul"
           />
-          <InputRightElement mr="2">
+          <InputRightElement>
             <Icon icon="material-symbols:search" width="24" height="24" />
           </InputRightElement>
         </InputGroup>
-        <Button w="max-content" px="12" onClick={handleClick}>
-          Cari Game
-        </Button>
+        <Flex gap="4">
+          <Button w="max-content" px="12" onClick={handleClickSearch}>
+            Cari Game
+          </Button>
+          <Button
+            variant="secondary"
+            w="max-content"
+            px="12"
+            onClick={handleClickAll}
+          >
+            Semua Game
+          </Button>
+        </Flex>
       </Flex>
     </MainLayout>
   );
