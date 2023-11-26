@@ -1,7 +1,6 @@
 import { Text, Flex, Heading, Img } from "@chakra-ui/react";
 import { MainLayout } from "@/components/layout";
 import { BoxedText, TextWithHeading, TextWithIcon } from "@/components/text";
-import { Icon } from "@iconify/react";
 
 function Detail() {
   const bgImg: string =
@@ -23,7 +22,8 @@ function Detail() {
   return (
     <MainLayout
       title="KukusanFinder - Detail"
-      bg={`linear-gradient(0deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%), url(${bgImg}), lightgray 50% / cover no-repeat`}
+      bg={`linear-gradient(0deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%), url(${bgImg}), lightgray 50% / cover`}
+      bgSize="cover"
       flexDirection="column"
       px="32"
       py="24"
@@ -61,11 +61,13 @@ function Detail() {
         </Flex>
       </Flex>
       <Flex flexWrap="wrap" justifyContent="space-between">
-        <TextWithHeading heading="Release Date" text="26-12-2001" />
-        <TextWithHeading heading="Publisher" text="DICE" />
-        <TextWithHeading heading="Developer" text="Electronic Arts" />
-        <TextWithHeading heading="Average Playtime" text="3.4 Hours" />
-        <TextWithHeading heading="Total Owners" text="100000 - 500000" />
+        <TextWithHeading heading="Release Date">26-12-2001</TextWithHeading>
+        <TextWithHeading heading="Publisher">DICE</TextWithHeading>
+        <TextWithHeading heading="Developer">Electronic Arts</TextWithHeading>
+        <TextWithHeading heading="Average Playtime">3.4 Hours</TextWithHeading>
+        <TextWithHeading heading="Total Owners">
+          100000 - 500000
+        </TextWithHeading>
       </Flex>
       <Text>
         Lorem ipsum dolor sit amet consectetur. Vestibulum justo mi id in id
@@ -84,6 +86,58 @@ function Detail() {
         cursus aliquam a sociis neque lacinia. Suspendisse fermentum et sagittis
         sollicitudin aliquet facilisis.
       </Text>
+      <Flex>
+        <Text>Images & Videos</Text>
+      </Flex>
+      <Flex justifyContent="space-between" gap="32">
+        <TextWithHeading
+          isSwap
+          w="calc(50% - 4px)"
+          heading="Minimum requirements :"
+          gap="2"
+        >
+          Lorem ipsum dolor sit amet consectetur. Vestibulum justo mi id in id
+          tincidunt risus. Arcu tellus enim in ridiculus ultricies facilisis.
+          Nunc netus cursus aliquam a sociis neque lacinia. Suspendisse
+          fermentum et sagittis sollicitudin aliquet facilisis. Lorem ipsum
+          dolor sit amet consectetur. Vestibulum justo mi id in id tincidunt
+          risus. Arcu tellus enim in ridiculus ultricies facilisis. Nunc netus
+          cursus aliquam a sociis neque lacinia. Suspendisse fermentum et
+          sagittis sollicitudin aliquet facilisis.Lorem ipsum dolor sit amet
+          consectetur. Vestibulum justo mi id in id tincidunt risus. Arcu tellus
+          enim in ridiculus ultricies facilisis. Nunc netus cursus aliquam a
+          sociis neque lacinia. Suspendisse fermentum et sagittis sollicitudin
+          aliquet facilisis.Lorem ipsum dolor sit amet consectetur. Vestibulum
+          justo mi id in id tincidunt risus. Arcu tellus enim in ridiculus
+          ultricies facilisis. Nunc netus cursus aliquam a sociis neque lacinia.
+          Suspendisse fermentum et sagittis sollicitudin aliquet facilisis.
+        </TextWithHeading>
+        <TextWithHeading
+          isSwap
+          w="calc(50% - 4px)"
+          heading="Recommended requirements :"
+          gap="2"
+        >
+          Lorem ipsum dolor sit amet consectetur. Vestibulum justo mi id in id
+          tincidunt risus. Arcu tellus enim in ridiculus ultricies facilisis.
+          Nunc netus cursus aliquam a sociis neque lacinia. Suspendisse
+          fermentum et sagittis sollicitudin aliquet facilisis. Lorem ipsum
+          dolor sit amet consectetur. Vestibulum justo mi id in id tincidunt
+          risus. Arcu tellus enim in ridiculus ultricies facilisis. Nunc netus
+          cursus aliquam a sociis neque lacinia. Suspendisse fermentum et
+          sagittis sollicitudin aliquet facilisis.Lorem ipsum dolor sit amet
+          consectetur. Vestibulum justo mi id in id tincidunt risus. Arcu tellus
+          enim in ridiculus ultricies facilisis.
+        </TextWithHeading>
+      </Flex>
+      <Flex justifyContent="space-between">
+        <TextWithHeading isSwap heading="Support email :" gap="2">
+          eki@semweb.com
+        </TextWithHeading>
+        <TextWithHeading isSwap heading="Support link :" gap="2">
+          https://www.kukusan-finder.netlify.com
+        </TextWithHeading>
+      </Flex>
     </MainLayout>
   );
 }

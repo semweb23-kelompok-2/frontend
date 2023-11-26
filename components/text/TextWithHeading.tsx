@@ -1,17 +1,25 @@
-import { Box, Heading, Text } from "@chakra-ui/react";
+import { Box, Heading, Text, BoxProps } from "@chakra-ui/react";
 
-interface textWithHeadingProps {
+interface textWithHeadingProps extends BoxProps {
   heading: string;
-  text: string;
+  children: string;
+  gap?: string;
+  isSwap?: boolean;
 }
 
-function TextWithHeading({ heading, text }: textWithHeadingProps) {
+function TextWithHeading({
+  w,
+  isSwap = false,
+  gap = "1",
+  heading,
+  children,
+}: textWithHeadingProps) {
   return (
-    <Box>
-      <Heading fontSize="md" fontWeight="regular" mb="1">
+    <Box w={w}>
+      <Heading fontSize="md" fontWeight={isSwap ? "bold" : "regular"} mb={gap}>
         {heading}
       </Heading>
-      <Text fontWeight="bold">{text}</Text>
+      <Text fontWeight={isSwap ? "regular" : "bold"}>{children}</Text>
     </Box>
   );
 }
