@@ -1,4 +1,4 @@
-import { Text, Flex, Heading, Img, Box } from "@chakra-ui/react";
+import { Text, Flex, Heading, Img } from "@chakra-ui/react";
 import { MainLayout } from "@/components/layout";
 import { BoxedText, TextWithHeading, TextWithIcon } from "@/components/text";
 import { Player, BigPlayButton } from "video-react";
