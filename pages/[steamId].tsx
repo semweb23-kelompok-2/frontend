@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { Text, Flex, Heading, Img, Button } from "@chakra-ui/react";
+import {
+  Text,
+  Flex,
+  Heading,
+  Img,
+  Button,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { MainLayout } from "@/components/layout";
 import { BoxedText, TextWithHeading, TextWithIcon } from "@/components/text";
 import { Player, BigPlayButton } from "video-react";
@@ -7,13 +14,14 @@ import "node_modules/video-react/dist/video-react.css";
 import { axiosGet } from "@/utils/axios";
 import { useRouter } from "next/router";
 import { AxiosResponse } from "axios";
-import { GameDetail, GameDetailBinding, TypeVal } from "@/types/detail";
-import { platform } from "os";
+import { GameDetail, GameDetailBinding } from "@/types/detail";
 import { toTitleCase } from "@/utils/stringFormatter";
+import KukusanModal from "@/components/kukusan-modal";
 
 function Detail() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [data, setData] = useState<GameDetailBinding>({} as GameDetailBinding);
+  const modalControl = useDisclosure();
   const router = useRouter();
 
   useEffect(() => {
@@ -82,7 +90,7 @@ function Detail() {
       color="white"
     >
       {!data.app_name ? (
-        <Heading m='auto'>Tidak ada game yang ditemukan</Heading>
+        <Heading m="auto">Tidak ada game yang ditemukan</Heading>
       ) : (
         <>
           <Flex gap="8">
@@ -161,7 +169,7 @@ function Detail() {
             </TextWithHeading>
             <TextWithHeading
               heading="Publisher"
-              onClick={() => console.log("T")}
+              onClick={() => modalControl.onOpen()}
             >
               {data.publisher?.value.split("/")[3]}
             </TextWithHeading>
@@ -232,6 +240,7 @@ function Detail() {
               </TextWithHeading>
             )}
           </Flex>
+          <KukusanModal type="genre" modalControl={modalControl} />
         </>
       )}
     </MainLayout>
