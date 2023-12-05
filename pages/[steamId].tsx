@@ -41,11 +41,6 @@ function Detail() {
     }
   }, [router.query]);
 
-  const bgImg: string =
-    "https://steamcdn-a.akamaihd.net/steam/apps/24960/page_bg_generated_v6b.jpg?t=1447352806";
-  const headerImg: string =
-    "https://steamcdn-a.akamaihd.net/steam/apps/24960/header.jpg?t=1447352806";
-
   const video: string =
     "https://cdn.akamai.steamstatic.com/steam/apps/80467/movie480.webm?t=1591894384";
 
