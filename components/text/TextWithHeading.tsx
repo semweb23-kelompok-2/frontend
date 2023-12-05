@@ -6,13 +6,15 @@ interface textWithHeadingProps extends BoxProps {
   gap?: string;
   isSwap?: boolean;
   isUrl?: boolean;
+  onClick?: () => void;
 }
 
 function TextWithHeading({
   w,
-  isSwap = false,
-  isUrl = false,
+  isSwap,
+  isUrl,
   gap = "1",
+  onClick,
   heading,
   children,
 }: textWithHeadingProps) {
@@ -26,7 +28,14 @@ function TextWithHeading({
           <Text fontWeight={isSwap ? "regular" : "bold"}>{children}</Text>
         </Link>
       ) : (
-        <Text fontWeight={isSwap ? "regular" : "bold"}>{children}</Text>
+        <Text
+          textDecoration={onClick ? "underline" : "initial"}
+          fontWeight={isSwap ? "regular" : "bold"}
+          cursor={onClick ? "pointer" : "initial"}
+          onClick={onClick}
+        >
+          {children}
+        </Text>
       )}
     </Box>
   );
