@@ -31,7 +31,7 @@ const SearchResultCard: React.FC<SearchProps> = ({
         boxShadow="base"
       >
         <Image src={header_image} alt={app_name} mb={4} />
-        <Text fontSize="40px" fontWeight="bold" mb={2}>
+        <Text fontSize="20px" fontWeight="bold" mb={2}>
           {app_name}
         </Text>
         <BoxedText bg="blue.700" color="white">

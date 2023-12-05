@@ -77,21 +77,27 @@ const SearchResultPage: React.FC = () => {
       justifyContent="center"
       alignItems="center"
     >
-      <Text fontSize="40px" fontWeight="bold">
-        Search Results for {query}
-      </Text>
-      <Flex justify="center" p={4}>
-        <SimpleGrid columns={[1, 2]} spacing={4}>
-          {searchResults.map((result, index) => (
-            <SearchResultCard
-              key={index}
-              app_id={result.app_id}
-              app_name={result.app_name}
-              header_image={result.header_image}
-              genres={result.genres}
-            />
-          ))}
-        </SimpleGrid>
+      <Flex direction="column" justify="center">
+        <Text fontSize="40px" fontWeight="bold">
+          Search Results for "{query}"
+        </Text>
+        {searchResults.length === 0 ? (
+          <Text fontSize="20px">No search results found.</Text>
+        ) : (
+          <Flex justify="center" p={4}>
+            <SimpleGrid columns={[1, 2]} spacing={4}>
+              {searchResults.map((result, index) => (
+                <SearchResultCard
+                  key={index}
+                  app_id={result.app_id}
+                  app_name={result.app_name}
+                  header_image={result.header_image}
+                  genres={result.genres}
+                />
+              ))}
+            </SimpleGrid>
+          </Flex>
+        )}
       </Flex>
     </MainLayout>
   );
