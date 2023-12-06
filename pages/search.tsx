@@ -1,6 +1,15 @@
 import { MainLayout } from "@/components/layout";
-import { Box, Image, Text, Flex, SimpleGrid } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
+import {
+  Text,
+  Flex,
+  SimpleGrid,
+  InputGroup,
+  Input,
+  InputRightElement,
+  useToast,
+} from "@chakra-ui/react";
+import { useState, useEffect, LegacyRef, useRef } from "react";
+import { Icon } from "@iconify/react";
 import { useRouter } from "next/router";
 import { useSearchParams } from "next/navigation";
 import SearchResultCard from "./searchResultCard";
@@ -26,13 +35,14 @@ const fetchSearchResult = async (query: String): Promise<SearchResult[]> => {
       },
     });
     const { bindings } = response.data.results;
-
-    const results: SearchResult[] = bindings.map((binding: any) => ({
-      app_id: binding.app_id.value,
-      app_name: binding.app_name.value,
-      header_image: binding.header_image.value,
-      genres: binding.genres.value,
-    }));
+    const results: SearchResult[] = !bindings[0].app_id
+      ? []
+      : bindings.map((binding: any) => ({
+          app_id: binding.app_id.value,
+          app_name: binding.app_name.value,
+          header_image: binding.header_image.value,
+          genres: binding.genres.value,
+        }));
 
     return results;
   } catch (error) {
@@ -67,24 +77,29 @@ const SearchResultPage: React.FC = () => {
     }
   }, [query]);
 
-  if (isLoading) {
-    return <div>Sedang memuatkan...</div>;
-  }
   return (
     <MainLayout
       title="KukusanFinder - Search"
+      isLoading={isLoading}
       color="white"
       justifyContent="center"
       alignItems="center"
     >
       <Flex direction="column" justify="center">
         <Text fontSize="40px" fontWeight="bold">
-          Search Results for "{query}"
+          Search Results for {query}
         </Text>
+        <InputGroup maxW="640px" alignItems="center">
+          <Input type="text" placeholder="Cari berdasarkan judul" py="6" />
+          <InputRightElement mt="1" mr="1">
+            <Icon icon="material-symbols:search" width="24" height="24" />
+          </InputRightElement>
+        </InputGroup>
         {searchResults.length === 0 ? (
           <Text fontSize="20px">No search results found.</Text>
         ) : (
-          <Flex justify="center" p={4}>
+          <Flex direction="column" justify="center" p={4}>
+            <Text fontSize="20px">Showing {searchResults.length} results</Text>
             <SimpleGrid columns={[1, 2]} spacing={4}>
               {searchResults.map((result, index) => (
                 <SearchResultCard

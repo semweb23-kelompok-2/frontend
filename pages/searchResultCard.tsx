@@ -21,7 +21,7 @@ const SearchResultCard: React.FC<SearchProps> = ({
   // add category and release_date
 }) => {
   return (
-    <Link href={`${baseUrl}/${app_id}`} passHref>
+    <Link href={`${app_id}`} passHref>
       <Box
         maxW="md"
         borderWidth="2px"
