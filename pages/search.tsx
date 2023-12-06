@@ -15,6 +15,7 @@ import { useSearchParams } from "next/navigation";
 import SearchResultCard from "./searchResultCard";
 import React from "react";
 import axios from "axios";
+import LoadingLayout from "@/components/layout/LoadingLayout";
 
 const baseUrl = "https://backend-oggxhc5l5q-as.a.run.app/api/games";
 
@@ -54,14 +55,32 @@ const fetchSearchResult = async (query: String): Promise<SearchResult[]> => {
 const SearchResultPage: React.FC = () => {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingPartial, setisLoadingPartial] = useState(true);
   const router = useRouter();
   const searchParams = useSearchParams();
   const query = searchParams.get("q") || router.query.query;
+  const toast = useToast();
+  const inputRef = useRef<HTMLInputElement>();
+
+  function handleClickSearch() {
+    if (inputRef && inputRef.current) {
+      if (inputRef.current.value)
+        router.push(`/search?q=${inputRef.current.value}`);
+      else if (!toast.isActive("toast"))
+        toast({
+          id: "toast",
+          title: "Masukkan input terlebih dahulu",
+          status: "error",
+          position: "top",
+          duration: 5000,
+        });
+    }
+  }
 
   useEffect(() => {
     const fetchResults = async () => {
       try {
-        setIsLoading(true);
+        if (!isLoading) setisLoadingPartial(true);
         const results = await fetchSearchResult(query as string);
         setSearchResults(results);
       } catch (error) {
@@ -69,6 +88,7 @@ const SearchResultPage: React.FC = () => {
         throw error;
       } finally {
         setIsLoading(false);
+        setisLoadingPartial(false);
       }
     };
 
@@ -90,12 +110,25 @@ const SearchResultPage: React.FC = () => {
           Search Results for {query}
         </Text>
         <InputGroup maxW="640px" alignItems="center">
-          <Input type="text" placeholder="Cari berdasarkan judul" py="6" />
+          <Input
+            ref={inputRef as LegacyRef<HTMLInputElement>}
+            type="text"
+            placeholder="Cari berdasarkan judul"
+            py="6"
+          />
           <InputRightElement mt="1" mr="1">
-            <Icon icon="material-symbols:search" width="24" height="24" />
+            <Icon
+              icon="material-symbols:search"
+              width="24"
+              height="24"
+              onClick={handleClickSearch}
+              style={{ cursor: "pointer" }}
+            />
           </InputRightElement>
         </InputGroup>
-        {searchResults.length === 0 ? (
+        {isLoadingPartial ? (
+          <LoadingLayout />
+        ) : searchResults.length === 0 ? (
           <Text fontSize="20px">No search results found.</Text>
         ) : (
           <Flex direction="column" justify="center" p={4}>
