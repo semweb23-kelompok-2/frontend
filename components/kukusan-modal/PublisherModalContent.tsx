@@ -1,8 +1,9 @@
-import { Flex, Text, Img } from "@chakra-ui/react";
+import { Flex, Text, Img, Heading } from "@chakra-ui/react";
 import { Publisher } from "@/types/detail";
 import { TextWithHeading } from "../text";
 
 function PublisherModalContent({
+  publisherName,
   publisherAbstract,
   publisherFoundDate,
   publisherLocation,
@@ -13,13 +14,29 @@ function PublisherModalContent({
 }: Publisher) {
   return (
     <Flex flexDirection="column" gap="4">
-      <Img
-        alignSelf="center"
-        h="16"
-        maxW="72"
-        src={publisherThumbnail.value}
-        objectFit="contain"
-      />
+      {publisherThumbnail && (
+        <Img
+          alignSelf="center"
+          h="16"
+          maxW="72"
+          src={publisherThumbnail.value}
+          alt={`${publisherName?.value} icon`}
+          objectFit="contain"
+        />
+      )}
+      {!(
+        publisherAbstract ||
+        publisherFoundDate ||
+        publisherLocation ||
+        publisherThumbnail ||
+        publisherFounderName ||
+        publisherHomepage ||
+        publisherNumEmployees
+      ) && (
+        <Heading fontSize="xl" textAlign="center" py="8">
+          Tidak ada informasi tambahan
+        </Heading>
+      )}
       <Flex flexDirection="column" gap="4" flexWrap="wrap">
         {publisherFounderName && (
           <TextWithHeading heading="Founder name">

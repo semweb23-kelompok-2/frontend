@@ -1,8 +1,9 @@
-import { Flex, Text, Img } from "@chakra-ui/react";
+import { Flex, Text, Img, Heading } from "@chakra-ui/react";
 import { Developer } from "@/types/detail";
 import { TextWithHeading } from "../text";
 
 function DeveloperModalContent({
+  developerName,
   developerThumbnail,
   developerAbstract,
   developerHomepage,
@@ -12,13 +13,28 @@ function DeveloperModalContent({
 }: Developer) {
   return (
     <Flex flexDirection="column" gap="4">
-      <Img
-        alignSelf="center"
-        h="16"
-        maxW="72"
-        src={developerThumbnail.value}
-        objectFit="contain"
-      />
+      {developerThumbnail && (
+        <Img
+          alignSelf="center"
+          h="16"
+          maxW="72"
+          src={developerThumbnail.value}
+          alt={`${developerName?.value} icon`}
+          objectFit="contain"
+        />
+      )}
+      {!(
+        developerThumbnail ||
+        developerAbstract ||
+        developerHomepage ||
+        developerLocation ||
+        developerFounderName ||
+        developerNumEmployees
+      ) && (
+        <Heading fontSize="xl" textAlign="center" py="8">
+          Tidak ada informasi tambahan
+        </Heading>
+      )}
       <Flex flexDirection="column" gap="4" flexWrap="wrap">
         {developerFounderName && (
           <TextWithHeading heading="Founder name">

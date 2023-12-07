@@ -2,6 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -22,6 +23,11 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'cdn.akamai.steamstatic.com',
         pathname: '/steam/apps/*/**'
+      },
+      {
+        protocol: 'http',
+        hostname: 'commons.wikimedia.org',
+        pathname: '/wiki/ **'
       },
     ],
   }
