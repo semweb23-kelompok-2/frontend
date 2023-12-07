@@ -7,25 +7,46 @@ function PublisherModalContent({
   publisherFoundDate,
   publisherLocation,
   publisherThumbnail,
+  publisherFounderName,
+  publisherHomepage,
+  publisherNumEmployees,
 }: Publisher) {
   return (
-    <Flex flexDirection="column" gap="2">
-      <Flex flexDirection={{ base: "column", lg: "row" }} gap="8">
-        <Img
-          alignSelf="center"
-          h="16"
-          maxW="72"
-          src={publisherThumbnail.value}
-          objectFit="contain"
-        />
-        <Flex flexDirection={{ base: "row", lg: "column" }} gap="4">
-          <TextWithHeading heading="Found Date">
+    <Flex flexDirection="column" gap="4">
+      <Img
+        alignSelf="center"
+        h="16"
+        maxW="72"
+        src={publisherThumbnail.value}
+        objectFit="contain"
+      />
+      <Flex flexDirection="column" gap="4" flexWrap="wrap">
+        {publisherFounderName && (
+          <TextWithHeading heading="Founder name">
+            {publisherFounderName.value}
+          </TextWithHeading>
+        )}
+        {publisherFoundDate && (
+          <TextWithHeading heading="Founding date">
             {publisherFoundDate.value}
           </TextWithHeading>
+        )}
+        {publisherLocation && (
           <TextWithHeading heading="Location">
             {publisherLocation.value.split("/")[4].replaceAll("_", " ")}
           </TextWithHeading>
-        </Flex>
+        )}
+        {publisherNumEmployees && (
+          <TextWithHeading heading="Number of employee">
+            {publisherNumEmployees.value}
+          </TextWithHeading>
+        )}
+
+        {publisherHomepage && (
+          <TextWithHeading isUrl heading="Homepage">
+            {publisherHomepage.value}
+          </TextWithHeading>
+        )}
       </Flex>
       <Text>{publisherAbstract?.value}</Text>
     </Flex>

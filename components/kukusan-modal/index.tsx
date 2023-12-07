@@ -13,6 +13,7 @@ import { modalContentType, modalProps } from "@/types/modal";
 import DeveloperModalContent from "./DeveloperModalContent";
 
 function KukusanModal({ modalControl, type, data }: modalProps) {
+  console.log(data)
   const modalContent: modalContentType = {
     developer: {
       title: (data as Developer)?.developerName?.value,

@@ -55,6 +55,10 @@ function Detail() {
     developerName: data?.developerName,
     developerAbstract: data?.developerAbstract,
     developerThumbnail: data?.developerThumbnail,
+    developerFounderName: data?.developerFounderName,
+    developerNumEmployees: data?.developerNumEmployees,
+    developerHomepage: data?.developerHomepage,
+    developerLocation: data?.developerLocation,
   };
 
   const publisherData: Publisher = {
@@ -63,6 +67,9 @@ function Detail() {
     publisherThumbnail: data?.publisherThumbnail,
     publisherFoundDate: data?.publisherFoundDate,
     publisherLocation: data?.publisherLocation,
+    publisherFounderName: data?.publisherFounderName,
+    publisherNumEmployees: data?.publisherNumEmployees,
+    publisherHomepage: data?.publisherHomepage,
   };
 
   const contentScrollStyle = {
@@ -108,7 +115,7 @@ function Detail() {
               src={data.header_image?.value}
             />
             <Flex flexDirection="column" gap="4">
-              <Heading fontSize={{ base: "3xl", lg: "5xl" }}>
+              <Heading fontSize={{ base: "3xl", lg: "4xl" }}>
                 {data?.app_name?.value}
               </Heading>
               <Flex gap="4" flexWrap="wrap">
@@ -167,7 +174,7 @@ function Detail() {
             </Flex>
           </Flex>
 
-          <Flex flexWrap="wrap" justifyContent="space-between">
+          <Flex flexWrap="wrap" gap="6">
             <TextWithHeading heading="Release Date">
               {data.release_date?.value}
             </TextWithHeading>

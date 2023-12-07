@@ -40,14 +40,21 @@ export interface Developer {
   developerName: Val;
   developerAbstract: Val;
   developerThumbnail: Val;
+  developerFounderName?: Val;
+  developerNumEmployees?: Val;
+  developerHomepage?: Val;
+  developerLocation?: Val;
 }
 
 export interface Publisher {
   publisherName: Val;
   publisherAbstract: Val;
   publisherThumbnail: Val;
-  publisherFoundDate: Val;
-  publisherLocation: Val;
+  publisherFoundDate?: Val;
+  publisherLocation?: Val;
+  publisherFounderName?: Val;
+  publisherNumEmployees?: Val;
+  publisherHomepage?: Val;
 }
 
 export interface Val {

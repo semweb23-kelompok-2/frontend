@@ -5,6 +5,10 @@ import { TextWithHeading } from "../text";
 function DeveloperModalContent({
   developerThumbnail,
   developerAbstract,
+  developerHomepage,
+  developerLocation,
+  developerFounderName,
+  developerNumEmployees,
 }: Developer) {
   return (
     <Flex flexDirection="column" gap="4">
@@ -15,6 +19,28 @@ function DeveloperModalContent({
         src={developerThumbnail.value}
         objectFit="contain"
       />
+      <Flex flexDirection="column" gap="4" flexWrap="wrap">
+        {developerFounderName && (
+          <TextWithHeading heading="Founder name">
+            {developerFounderName.value}
+          </TextWithHeading>
+        )}
+        {developerLocation && (
+          <TextWithHeading heading="Location">
+            {developerLocation.value.split("/")[4].replaceAll("_", " ")}
+          </TextWithHeading>
+        )}
+        {developerNumEmployees && (
+          <TextWithHeading heading="Number of employee">
+            {developerNumEmployees.value}
+          </TextWithHeading>
+        )}
+        {developerHomepage && (
+          <TextWithHeading isUrl heading="Homepage">
+            {developerHomepage.value}
+          </TextWithHeading>
+        )}
+      </Flex>
       <Text>{developerAbstract?.value}</Text>
     </Flex>
   );
