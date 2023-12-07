@@ -24,11 +24,12 @@ function TextWithHeading({
         {heading}
       </Heading>
       {isUrl ? (
-        <Link target="_blank" href={children}>
-          <Text fontWeight={isSwap ? "regular" : "bold"}>{children}</Text>
+        <Link w='4' target="_blank" href={children}>
+          <Text w="fit-content" fontWeight={isSwap ? "regular" : "bold"}>{children}</Text>
         </Link>
       ) : (
         <Text
+          w="fit-content"
           textDecoration={onClick ? "underline" : "initial"}
           fontWeight={isSwap ? "regular" : "bold"}
           cursor={onClick ? "pointer" : "initial"}

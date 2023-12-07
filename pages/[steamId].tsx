@@ -7,61 +7,70 @@ import {
   Button,
   useDisclosure,
 } from "@chakra-ui/react";
-import { MainLayout } from "@/components/layout";
-import { BoxedText, TextWithHeading, TextWithIcon } from "@/components/text";
 import { Player, BigPlayButton } from "video-react";
 import "node_modules/video-react/dist/video-react.css";
 import { axiosGet } from "@/utils/axios";
 import { useRouter } from "next/router";
 import { AxiosResponse } from "axios";
-import { GameDetail, GameDetailBinding } from "@/types/detail";
+
+import { MainLayout } from "@/components/layout";
+import { BoxedText, TextWithHeading, TextWithIcon } from "@/components/text";
+import {
+  Developer,
+  GameDetail,
+  GameDetailBinding,
+  Publisher,
+} from "@/types/detail";
 import { toTitleCase } from "@/utils/stringFormatter";
 import KukusanModal from "@/components/kukusan-modal";
+import { modalDataType, modalType } from "@/types/modal";
+import { processDetailFetchData } from "@/utils/apiProcessor";
 
 function Detail() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [modalType, setModalType] = useState<modalType>("developer");
+  const [modalData, setModalData] = useState<modalDataType>({} as Developer);
   const [data, setData] = useState<GameDetailBinding>({} as GameDetailBinding);
   const modalControl = useDisclosure();
   const router = useRouter();
+
+  function handleModalType(type: modalType) {
+    setModalType(type);
+    setModalData(type === "developer" ? developerData : publisherData);
+    modalControl.onOpen();
+  }
 
   useEffect(() => {
     if (!!router.query.steamId) {
       axiosGet(`/${router.query.steamId}`)
         .then((res: AxiosResponse<GameDetail, any>) => {
-          const gameDetail = res.data.results.bindings[0];
-          setData(
-            gameDetail.app_name
-              ? {
-                  ...gameDetail,
-                  categories: {
-                    ...gameDetail.categories,
-                    value:
-                      typeof gameDetail.categories.value === "string"
-                        ? (gameDetail.categories.value.split(", ") as string[])
-                        : gameDetail.categories.value,
-                  },
-                }
-              : ({} as GameDetailBinding)
-          );
+          setData(processDetailFetchData(res.data));
         })
         .then(() => setIsLoading(false));
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }
   }, [router.query]);
 
-  const video: string =
-    "https://cdn.akamai.steamstatic.com/steam/apps/80467/movie480.webm?t=1591894384";
+  const developerData: Developer = {
+    developerName: data?.developerName,
+    developerAbstract: data?.developerAbstract,
+    developerThumbnail: data?.developerThumbnail,
+    developerFounderName: data?.developerFounderName,
+    developerNumEmployees: data?.developerNumEmployees,
+    developerHomepage: data?.developerHomepage,
+    developerLocation: data?.developerLocation,
+  };
 
-  const imgs: string[] = [
-    "https://cdn.akamai.steamstatic.com/steam/apps/24960/ss_ae0308877700b0339f7ee8e41bcc03656861d35d.1920x1080.jpg?t=1682701509",
-    "https://cdn.akamai.steamstatic.com/steam/apps/24960/ss_b8af772596e0093da432d9774a2b904e3955c631.1920x1080.jpg?t=1682701509",
-    "https://cdn.akamai.steamstatic.com/steam/apps/24960/ss_6692ebaff0e5a0786db7483c834ca879ebcaa09f.600x338.jpg?t=1682701509",
-    "https://cdn.akamai.steamstatic.com/steam/apps/24960/ss_b5c1687fab65c7ac25c74a4b7b6d42bc6e585cff.600x338.jpg?t=1682701509",
-    "https://cdn.akamai.steamstatic.com/steam/apps/24960/ss_631d8a42e34ef0592949a9dc449d39be7d3a6227.600x338.jpg?t=1682701509",
-    "https://cdn.akamai.steamstatic.com/steam/apps/24960/ss_ac00f9b0d76233c12cf43ee5e916e5736890cacf.600x338.jpg?t=1682701509",
-    "https://cdn.akamai.steamstatic.com/steam/apps/24960/ss_2abc532120ae0f8fb354cd38b362b1c1c3165b66.600x338.jpg?t=1682701509",
-    "https://cdn.akamai.steamstatic.com/steam/apps/24960/ss_62f25fb704fcb28c85f66ce30c4c007214342395.600x338.jpg?t=1682701509",
-  ];
+  const publisherData: Publisher = {
+    publisherName: data?.publisherName,
+    publisherAbstract: data?.publisherAbstract,
+    publisherThumbnail: data?.publisherThumbnail,
+    publisherFoundDate: data?.publisherFoundDate,
+    publisherLocation: data?.publisherLocation,
+    publisherFounderName: data?.publisherFounderName,
+    publisherNumEmployees: data?.publisherNumEmployees,
+    publisherHomepage: data?.publisherHomepage,
+  };
 
   const contentScrollStyle = {
     "&::-webkit-scrollbar": {
@@ -73,6 +82,7 @@ function Detail() {
       borderRadius: "24px",
     },
   };
+
   return (
     <MainLayout
       title="KukusanFinder - Detail"
@@ -84,8 +94,8 @@ function Detail() {
       }
       bgSize="cover"
       flexDirection="column"
-      px="32"
-      py="24"
+      px={{ base: "8", lg: "32" }}
+      py={!isLoading ? { base: "8", lg: "24" } : "0"}
       gap="8"
       color="white"
     >
@@ -93,16 +103,21 @@ function Detail() {
         <Heading m="auto">Tidak ada game yang ditemukan</Heading>
       ) : (
         <>
-          <Flex gap="8">
+          <Flex
+            flexDirection={{ base: "column", lg: "row" }}
+            gap={{ base: "4", lg: "8" }}
+          >
             <Img
-              w="440px"
+              w={{ base: "full", lg: "calc(100vw / 3.2)" }}
               h="fit-content"
               borderRadius="md"
               boxShadow="4px 4px 4px 0px rgba(0, 0, 0, 0.25)"
               src={data.header_image?.value}
             />
             <Flex flexDirection="column" gap="4">
-              <Heading fontSize="5xl">{data?.app_name?.value}</Heading>
+              <Heading fontSize={{ base: "3xl", lg: "4xl" }}>
+                {data?.app_name?.value}
+              </Heading>
               <Flex gap="4" flexWrap="wrap">
                 {data.categories &&
                   (data.categories?.value as string[]).map(
@@ -135,50 +150,50 @@ function Detail() {
               </Flex>
               <Flex gap="8">
                 <Flex flexDirection="column" gap="2">
-                  <Text>Game genre :</Text>
-                  <Flex>
-                    <Button
-                      textDecoration="underline"
-                      colorScheme="red"
-                      size="sm"
-                      px="6"
-                      key={data.genres?.value}
-                    >
-                      {data.genres?.value.split("/")[3]}
-                    </Button>
-                  </Flex>
-                </Flex>
-                <Flex flexDirection="column" gap="2">
                   <Text>This game is available on :</Text>
                   <Flex gap="4">
-                    {data.platforms?.value
-                      .split(", ")
-                      .map((platform: string) => (
+                    {(data.platforms?.value as string[]).map(
+                      (platform: string) => (
                         <BoxedText key={platform}>
                           {toTitleCase(platform)}
                         </BoxedText>
-                      ))}
+                      )
+                    )}
                   </Flex>
                 </Flex>
               </Flex>
             </Flex>
           </Flex>
-          <Flex flexWrap="wrap" justifyContent="space-between">
+
+          <Flex flexDirection="column" gap="2">
+            <Text>Game genre :</Text>
+            <Flex gap="4" flexWrap="wrap">
+              {(data.genres?.value as string[]).map((genre: string) => (
+                <BoxedText key={genre}>{genre}</BoxedText>
+              ))}
+            </Flex>
+          </Flex>
+
+          <Flex flexWrap="wrap" gap="6">
             <TextWithHeading heading="Release Date">
               {data.release_date?.value}
             </TextWithHeading>
-            <TextWithHeading
-              heading="Publisher"
-              onClick={() => modalControl.onOpen()}
-            >
-              {data.publisher?.value.split("/")[3]}
-            </TextWithHeading>
-            <TextWithHeading
-              heading="Developer"
-              onClick={() => console.log("T")}
-            >
-              {data.developer?.value.split("/")[3]}
-            </TextWithHeading>
+            {data.publisherName?.value && (
+              <TextWithHeading
+                heading="Publisher"
+                onClick={() => handleModalType("publisher")}
+              >
+                {data.publisherName.value}
+              </TextWithHeading>
+            )}
+            {data.developerName?.value && (
+              <TextWithHeading
+                heading="Developer"
+                onClick={() => handleModalType("developer")}
+              >
+                {data.developerName?.value}
+              </TextWithHeading>
+            )}
             <TextWithHeading heading="Average Playtime">
               {`${data.avg_playtime?.value} Hours`}
             </TextWithHeading>
@@ -186,21 +201,26 @@ function Detail() {
               {data.owners?.value}
             </TextWithHeading>
           </Flex>
-          <Text>{/* {data.} */}</Text>
+
+          <Text>
+            {!!data.gameAbstract
+              ? data.gameAbstract.value
+              : data.short_description?.value}
+          </Text>
 
           {data.movies && (
             <Player src={data.movies.value}>
               <BigPlayButton position="center" />
             </Player>
           )}
-
-          {/* <Flex pb="2" gap="4" overflowX="auto" css={contentScrollStyle}>
-        {data.screenshots &&
-          (JSON.parse(data.screenshots?.value as string) as any[]).map((img: any) => (
-            <Img key={img} src={img} w="360px" />
-          ))}
-      </Flex> */}
-          <Flex justifyContent="space-between" gap="32">
+          {data.screenshots && (
+            <Flex pb="2" gap="4" overflowX="auto" css={contentScrollStyle}>
+              {data.screenshots?.value.map((img: any) => (
+                <Img key={img} src={img} w="360px" />
+              ))}
+            </Flex>
+          )}
+          <Flex justifyContent="space-between" gap={{ base: "4", lg: "32" }}>
             {data.minimum_requirements?.value && (
               <TextWithHeading
                 isSwap
@@ -230,17 +250,33 @@ function Detail() {
           </Flex>
           <Flex flexDirection="column" gap="4">
             {data.support_url?.value && (
-              <TextWithHeading isUrl isSwap heading="Support email :" gap="2">
+              <TextWithHeading
+                w="fit-content"
+                isUrl
+                isSwap
+                heading="Support email :"
+                gap="2"
+              >
                 {data.support_url.value}
               </TextWithHeading>
             )}
             {data.website?.value && (
-              <TextWithHeading isUrl isSwap heading="Support link :" gap="2">
+              <TextWithHeading
+                w="fit-content"
+                isUrl
+                isSwap
+                heading="Support link :"
+                gap="2"
+              >
                 {data.website.value}
               </TextWithHeading>
             )}
           </Flex>
-          <KukusanModal type="genre" modalControl={modalControl} />
+          <KukusanModal
+            type={modalType}
+            modalControl={modalControl}
+            data={modalData}
+          />
         </>
       )}
     </MainLayout>
