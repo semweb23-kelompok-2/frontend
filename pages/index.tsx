@@ -7,7 +7,7 @@ import {
   InputGroup,
   InputRightElement,
   Button,
-  useToast
+  useToast,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { LegacyRef, useRef } from "react";
@@ -69,7 +69,7 @@ export default function Home() {
             placeholder="Cari berdasarkan judul"
             py="6"
           />
-          <InputRightElement mt="1" mr='1'>
+          <InputRightElement mt="1" mr="1">
             <Icon icon="material-symbols:search" width="24" height="24" />
           </InputRightElement>
         </InputGroup>
