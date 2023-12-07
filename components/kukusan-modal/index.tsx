@@ -7,47 +7,32 @@ import {
   ModalBody,
   ModalCloseButton,
 } from "@chakra-ui/react";
-import { ReactNode } from "react";
+import PublisherModalContent from "./PublisherModalContent";
+import { Developer, Publisher } from "@/types/detail";
+import { modalContentType, modalProps } from "@/types/modal";
+import DeveloperModalContent from "./DeveloperModalContent";
 
-interface modalProps {
-  modalControl: modalControlType;
-  type: string;
-}
-
-type modalControlType = {
-  isOpen: boolean;
-  onClose: () => void;
-  onOpen: () => void;
-};
-
-type modalContentType = {
-  [x: string]: {
-    title: string;
-    content: ReactNode;
-  };
-};
-
-function KukusanModal({ modalControl, type }: modalProps) {
+function KukusanModal({ modalControl, type, data }: modalProps) {
   const modalContent: modalContentType = {
     developer: {
-      title: "Developer detail",
-      content: <p>Hello</p>,
+      title: (data as Developer)?.developerName?.value,
+      content: <DeveloperModalContent {...(data as Developer)} />,
     },
     publisher: {
-      title: "Publisher detail",
-      content: <p>Hello</p>,
-    },
-    genre: {
-      title: "Genre detail",
-      content: <p>Hello</p>,
+      title: (data as Publisher)?.publisherName?.value,
+      content: <PublisherModalContent {...(data as Publisher)} />,
     },
   };
 
   return (
-    <Modal isOpen={modalControl.isOpen} onClose={modalControl.onClose}>
+    <Modal
+      size="2xl"
+      isOpen={modalControl.isOpen}
+      onClose={modalControl.onClose}
+    >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Modal Title</ModalHeader>
+        <ModalHeader>{modalContent[type].title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>{modalContent[type].content}</ModalBody>
       </ModalContent>

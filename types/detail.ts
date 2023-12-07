@@ -11,40 +11,55 @@ interface Results {
   bindings: GameDetailBinding[];
 }
 
-export interface GameDetailBinding {
+export interface GameDetailBinding extends Developer, Publisher {
   app_name: TypeVal;
-  release_date: Releasedate;
+  release_date: TypeValDatatype;
   background: TypeVal;
-  in_english: Releasedate;
-  developer: TypeVal;
-  publisher: TypeVal;
+  in_english: TypeValDatatype;
   website?: TypeVal;
   support_url?: TypeVal;
   movies?: TypeVal;
   minimum_requirements?: TypeVal;
   recommended_requirements?: TypeVal;
-  req_age: Releasedate;
+  req_age: TypeValDatatype;
   header_image: TypeVal;
-  avg_playtime: Releasedate;
-  median_playtime: Releasedate;
-  negative_ratings: Releasedate;
-  positive_ratings: Releasedate;
+  avg_playtime: TypeValDatatype;
+  median_playtime: TypeValDatatype;
+  negative_ratings: TypeValDatatype;
+  positive_ratings: TypeValDatatype;
   owners: TypeVal;
-  screenshots: TypeVal;
+  screenshots: TypeValArray;
   categories: TypeVal | TypeValArray;
-  genres: TypeVal;
-  platforms: TypeVal;
+  genres: TypeVal | TypeValArray;
+  platforms: TypeVal | TypeValArray;
+  gameAbstract: Val;
+  short_description: Val;
 }
 
-interface Releasedate {
-  type: string;
+export interface Developer {
+  developerName: Val;
+  developerAbstract: Val;
+  developerThumbnail: Val;
+}
+
+export interface Publisher {
+  publisherName: Val;
+  publisherAbstract: Val;
+  publisherThumbnail: Val;
+  publisherFoundDate: Val;
+  publisherLocation: Val;
+}
+
+export interface Val {
   value: string;
+}
+
+export interface TypeVal extends Val {
+  type: string;
+}
+
+export interface TypeValDatatype extends TypeVal {
   datatype: string;
-}
-
-export interface TypeVal {
-  type: string;
-  value: string;
 }
 
 export interface TypeValArray {
