@@ -88,9 +88,9 @@ function Detail() {
       title="KukusanFinder - Detail"
       isLoading={isLoading}
       bg={
-        !data.app_name
+        !data.background
           ? "linear-gradient(122deg, #121B30 6.7%, #0D3449 89.76%)"
-          : `linear-gradient(0deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%), url(${data.background?.value}), lightgray 50% / cover`
+          : `linear-gradient(0deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%), url(${data.background.value}), lightgray 50% / cover`
       }
       bgSize="cover"
       flexDirection="column"

@@ -24,19 +24,20 @@ function TextWithHeading({
         {heading}
       </Heading>
       {isUrl ? (
-        <Link w='4' target="_blank" href={children}>
-          <Text w="fit-content" fontWeight={isSwap ? "regular" : "bold"}>{children}</Text>
+        <Link w="4" target="_blank" href={children}>
+          <Text w="fit-content" fontWeight={isSwap ? "regular" : "bold"}>
+            {children}
+          </Text>
         </Link>
       ) : (
         <Text
           w="fit-content"
+          dangerouslySetInnerHTML={{ __html: children }}
           textDecoration={onClick ? "underline" : "initial"}
           fontWeight={isSwap ? "regular" : "bold"}
           cursor={onClick ? "pointer" : "initial"}
           onClick={onClick}
-        >
-          {children}
-        </Text>
+        />
       )}
     </Box>
   );

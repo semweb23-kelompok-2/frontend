@@ -39,7 +39,7 @@ export interface GameDetailBinding extends Developer, Publisher {
 export interface Developer {
   developerName: Val;
   developerAbstract: Val;
-  developerThumbnail: Val;
+  developerThumbnail?: Val;
   developerFounderName?: Val;
   developerNumEmployees?: Val;
   developerHomepage?: Val;
@@ -49,7 +49,7 @@ export interface Developer {
 export interface Publisher {
   publisherName: Val;
   publisherAbstract: Val;
-  publisherThumbnail: Val;
+  publisherThumbnail?: Val;
   publisherFoundDate?: Val;
   publisherLocation?: Val;
   publisherFounderName?: Val;
