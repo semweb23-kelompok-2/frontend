@@ -13,6 +13,7 @@ import {
   Radio,
   CheckboxGroup,
   Checkbox,
+  Button,
 } from "@chakra-ui/react";
 import { useState, useEffect, LegacyRef, useRef } from "react";
 import { Icon } from "@iconify/react";
@@ -41,7 +42,7 @@ const SearchResultPage: React.FC = () => {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingPartial, setisLoadingPartial] = useState(true);
-  const [sortOption, setSortOption] = useState("app_name");
+  const [sortOption, setSortOption] = useState("positive_ratings");
   const [sortOrder, setSortOrder] = useState("asc");
   const [filters, setFilters] = useState<{
     genres: { label: string; isChecked: boolean }[];
@@ -105,14 +106,53 @@ const SearchResultPage: React.FC = () => {
     }));
   }
 
+  async function handleApplyFilters() {
+    try {
+      if (!isLoading) setisLoadingPartial(true);
+      const results = await fetchSearchResult(
+        query as string,
+        sortOption,
+        sortOrder
+      );
+      setSearchResults([...results]);
+    } catch (error) {
+      console.error("Error fetching search results: ", error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+      setisLoadingPartial(false);
+    }
+  }
+
   const fetchSearchResult = async (
     query: string,
     sortOption: string,
     sortOrder: string
   ): Promise<SearchResult[]> => {
     try {
+      let responseURL = `${baseUrl}/search?name=${query}`;
+
+      const genreResults = filters.genres.filter((genre) => genre.isChecked);
+
+      const categoryResults = filters.categories.filter(
+        (category) => category.isChecked
+      );
+
+      console.log(genreResults);
+
+      if (genreResults.length > 0) {
+        responseURL += `&genre=${genreResults
+          .map((genre) => genre.label)
+          .join("&genre=")}`;
+      }
+
+      if (categoryResults.length > 0) {
+        responseURL += `&category=${categoryResults
+          .map((category) => category.label)
+          .join("&category=")}`;
+      }
       const response = await axios.get(
-        `${baseUrl}/search?name=${query}&order_by=${sortOption}&order=${sortOrder}`,
+        `${responseURL}&order_by=${sortOption}&order=${sortOrder}`,
         {
           headers: {
             "Access-Control-Allow-Origin": "*",
@@ -165,7 +205,7 @@ const SearchResultPage: React.FC = () => {
         (binding: any) => binding.genre_label.value
       );
       const categories = categoryResponse.data.results.bindings.map(
-        (binding: any) => binding.category.value
+        (binding: any) => binding.category_label.value
       );
       return { genres, categories };
     } catch (error) {
@@ -173,30 +213,6 @@ const SearchResultPage: React.FC = () => {
       throw error;
     }
   };
-
-  useEffect(() => {
-    const fetchResults = async () => {
-      try {
-        if (!isLoading) setisLoadingPartial(true);
-        const results = await fetchSearchResult(
-          query as string,
-          sortOption,
-          sortOrder
-        );
-        setSearchResults(results);
-      } catch (error) {
-        console.error("Error fetching search results: ", error);
-        throw error;
-      } finally {
-        setIsLoading(false);
-        setisLoadingPartial(false);
-      }
-    };
-
-    if (query) {
-      fetchResults();
-    }
-  }, [query, sortOption, sortOrder]);
 
   useEffect(() => {
     const fetchFilters = async () => {
@@ -217,8 +233,11 @@ const SearchResultPage: React.FC = () => {
         throw error;
       }
     };
-    fetchFilters();
-  }, []);
+    if (!!(searchParams.get("q") || router.query.query)) {
+      handleApplyFilters();
+      fetchFilters();
+    }
+  }, [searchParams, router.query]);
 
   return (
     <MainLayout
@@ -279,7 +298,7 @@ const SearchResultPage: React.FC = () => {
           ) : searchResults.length === 0 ? (
             <Text fontSize="20px">No search results found.</Text>
           ) : (
-            <Flex direction="column" justify="center" p={4}>
+            <Flex direction="column" justify="flex-start" p={4}>
               <Text fontSize="20px">
                 Showing {searchResults.length} results
               </Text>
@@ -310,21 +329,15 @@ const SearchResultPage: React.FC = () => {
                 <Text fontSize="15px" fontStyle="oblique">
                   Genres
                 </Text>
-                {filters.genres
-                  .filter((genre) =>
-                    searchResults.some((result) =>
-                      result.genres.includes(genre.label)
-                    )
-                  )
-                  .map((genre) => (
-                    <Checkbox
-                      key={genre.label}
-                      isChecked={genre.isChecked}
-                      onChange={() => handleGenreChange(genre.label)}
-                    >
-                      {genre.label}
-                    </Checkbox>
-                  ))}
+                {filters.genres.map((genre) => (
+                  <Checkbox
+                    key={genre.label}
+                    isChecked={genre.isChecked}
+                    onChange={() => handleGenreChange(genre.label)}
+                  >
+                    {genre.label}
+                  </Checkbox>
+                ))}
               </Stack>
             </CheckboxGroup>
             <CheckboxGroup>
@@ -332,23 +345,20 @@ const SearchResultPage: React.FC = () => {
                 <Text fontSize="15px" fontStyle="oblique">
                   Categories
                 </Text>
-                {filters.categories
-                  .filter((category) =>
-                    searchResults.some((result) =>
-                      result.categories.includes(category.label)
-                    )
-                  )
-                  .map((category) => (
-                    <Checkbox
-                      key={category.label}
-                      isChecked={category.isChecked}
-                      onChange={() => handleCategoryChange(category.label)}
-                    >
-                      {category.label}
-                    </Checkbox>
-                  ))}
+                {filters.categories.map((category) => (
+                  <Checkbox
+                    key={category.label}
+                    isChecked={category.isChecked}
+                    onChange={() => handleCategoryChange(category.label)}
+                  >
+                    {category.label}
+                  </Checkbox>
+                ))}
               </Stack>
             </CheckboxGroup>
+            <Button onClick={handleApplyFilters} mt={2}>
+              Apply Filter
+            </Button>
           </Flex>
         </Flex>
       </Flex>
