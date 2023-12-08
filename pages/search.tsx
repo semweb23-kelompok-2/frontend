@@ -138,8 +138,6 @@ const SearchResultPage: React.FC = () => {
         (category) => category.isChecked
       );
 
-      console.log(genreResults);
-
       if (genreResults.length > 0) {
         responseURL += `&genre=${genreResults
           .map((genre) => genre.label)
