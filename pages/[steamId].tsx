@@ -159,8 +159,8 @@ function Detail() {
                   }
                 >
                   {parseInt(data.req_age?.value) === 0
-                    ? "Semua umur"
-                    : `Umur ${data.req_age?.value}+`}
+                    ? "All ages"
+                    : `${data.req_age?.value}+`}
                 </BoxedText>
               </Flex>
               <Flex gap="8">
