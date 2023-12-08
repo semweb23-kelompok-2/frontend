@@ -7,8 +7,8 @@ interface SearchProps {
   app_name: string;
   app_id: string;
   header_image: string;
-  genres: string;
-  categories: string;
+  genres: string[];
+  categories: string[];
   release_date: string;
   positive_ratings: number;
   negative_ratings: number;
@@ -50,13 +50,27 @@ const SearchResultCard: React.FC<SearchProps> = ({
           </TextWithIcon>
         </Flex>
 
-        <BoxedText bg="blue.700" color="white">
-          {genres}
-        </BoxedText>
+        <Flex direction="column">
+          <Text>Genres: </Text>
+          <Flex gap="4" flexWrap="wrap">
+            {(genres as string[]).map((genre: string) => (
+              <BoxedText bg="blue.600" key={genre}>
+                {genre}
+              </BoxedText>
+            ))}
+          </Flex>
+        </Flex>
         <br />
-        <BoxedText bg="blue.700" color="white">
-          {categories}
-        </BoxedText>
+        <Flex direction="column">
+          <Text>Categories: </Text>
+          <Flex gap="4" flexWrap="wrap">
+            {(categories as string[]).map((categories: string) => (
+              <BoxedText bg="blue.400" key={categories}>
+                {categories}
+              </BoxedText>
+            ))}
+          </Flex>
+        </Flex>
       </Box>
     </Link>
   );

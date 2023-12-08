@@ -11,6 +11,8 @@ import {
   RadioGroup,
   Stack,
   Radio,
+  CheckboxGroup,
+  Checkbox,
 } from "@chakra-ui/react";
 import { useState, useEffect, LegacyRef, useRef } from "react";
 import { Icon } from "@iconify/react";
@@ -20,6 +22,7 @@ import SearchResultCard from "../components/card/searchResultCard";
 import React from "react";
 import axios from "axios";
 import LoadingLayout from "@/components/layout/LoadingLayout";
+import { convertToArray } from "@/utils/stringFormatter";
 
 const baseUrl = "https://backend-oggxhc5l5q-as.a.run.app/api/games";
 
@@ -27,8 +30,8 @@ interface SearchResult {
   app_id: string;
   app_name: string;
   header_image: string;
-  genres: string;
-  categories: string;
+  genres: string[];
+  categories: string[];
   release_date: string;
   positive_ratings: number;
   negative_ratings: number;
@@ -40,6 +43,13 @@ const SearchResultPage: React.FC = () => {
   const [isLoadingPartial, setisLoadingPartial] = useState(true);
   const [sortOption, setSortOption] = useState("app_name");
   const [sortOrder, setSortOrder] = useState("asc");
+  const [filters, setFilters] = useState<{
+    genres: { label: string; isChecked: boolean }[];
+    categories: { label: string; isChecked: boolean }[];
+  }>({
+    genres: [],
+    categories: [],
+  });
   const router = useRouter();
   const searchParams = useSearchParams();
   const query = searchParams.get("q") || router.query.query;
@@ -71,6 +81,30 @@ const SearchResultPage: React.FC = () => {
     fetchSearchResult(query as string, sortOption, sortOrder);
   }
 
+  function handleGenreChange(selection: string) {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      genres: prevFilters.genres.map((genre) => ({
+        label: genre.label,
+        isChecked:
+          genre.label === selection ? !genre.isChecked : genre.isChecked,
+      })),
+    }));
+  }
+
+  function handleCategoryChange(selection: string) {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      categories: prevFilters.categories.map((category) => ({
+        label: category.label,
+        isChecked:
+          category.label === selection
+            ? !category.isChecked
+            : category.isChecked,
+      })),
+    }));
+  }
+
   const fetchSearchResult = async (
     query: string,
     sortOption: string,
@@ -92,8 +126,8 @@ const SearchResultPage: React.FC = () => {
             app_id: binding.app_id.value,
             app_name: binding.app_name.value,
             header_image: binding.header_image.value,
-            genres: binding.genres.value,
-            categories: binding.categories.value,
+            genres: convertToArray(binding.genres.value, ", "),
+            categories: convertToArray(binding.categories.value, ","),
             release_date: binding.release_date.value,
             positive_ratings: binding.positive_ratings.value,
             negative_ratings: binding.negative_ratings.value,
@@ -116,6 +150,26 @@ const SearchResultPage: React.FC = () => {
       return sortedResults;
     } catch (error) {
       console.error("Error fetching search results: ", error);
+      throw error;
+    }
+  };
+
+  const fetchSearchFilters = async (): Promise<{
+    genres: string[];
+    categories: string[];
+  }> => {
+    try {
+      const genreResponse = await axios.get(`${baseUrl}/genres`);
+      const categoryResponse = await axios.get(`${baseUrl}/categories`);
+      const genres = genreResponse.data.results.bindings.map(
+        (binding: any) => binding.genre_label.value
+      );
+      const categories = categoryResponse.data.results.bindings.map(
+        (binding: any) => binding.category.value
+      );
+      return { genres, categories };
+    } catch (error) {
+      console.error("Error fetching filters: ", error);
       throw error;
     }
   };
@@ -143,6 +197,28 @@ const SearchResultPage: React.FC = () => {
       fetchResults();
     }
   }, [query, sortOption, sortOrder]);
+
+  useEffect(() => {
+    const fetchFilters = async () => {
+      try {
+        const filters = await fetchSearchFilters();
+        setFilters({
+          genres: filters.genres.map((genre) => ({
+            label: genre,
+            isChecked: false,
+          })),
+          categories: filters.categories.map((category) => ({
+            label: category,
+            isChecked: false,
+          })),
+        });
+      } catch (error) {
+        console.log("Error fetching filters: ", error);
+        throw error;
+      }
+    };
+    fetchFilters();
+  }, []);
 
   return (
     <MainLayout
@@ -196,30 +272,85 @@ const SearchResultPage: React.FC = () => {
             </Stack>
           </RadioGroup>
         </Flex>
-        {isLoadingPartial ? (
-          <LoadingLayout />
-        ) : searchResults.length === 0 ? (
-          <Text fontSize="20px">No search results found.</Text>
-        ) : (
-          <Flex direction="column" justify="center" p={4}>
-            <Text fontSize="20px">Showing {searchResults.length} results</Text>
-            <SimpleGrid columns={[1, 2]} spacing={4}>
-              {searchResults.map((result, index) => (
-                <SearchResultCard
-                  key={index}
-                  app_id={result.app_id}
-                  app_name={result.app_name}
-                  header_image={result.header_image}
-                  genres={result.genres}
-                  categories={result.categories}
-                  release_date={result.release_date}
-                  positive_ratings={result.positive_ratings}
-                  negative_ratings={result.negative_ratings}
-                />
-              ))}
-            </SimpleGrid>
+
+        <Flex direction="row" justifyContent="space-between">
+          {isLoadingPartial ? (
+            <LoadingLayout />
+          ) : searchResults.length === 0 ? (
+            <Text fontSize="20px">No search results found.</Text>
+          ) : (
+            <Flex direction="column" justify="center" p={4}>
+              <Text fontSize="20px">
+                Showing {searchResults.length} results
+              </Text>
+              <SimpleGrid columns={[1, 2]} spacing={4}>
+                {searchResults.map((result, index) => (
+                  <SearchResultCard
+                    key={index}
+                    app_id={result.app_id}
+                    app_name={result.app_name}
+                    header_image={result.header_image}
+                    genres={result.genres}
+                    categories={result.categories}
+                    release_date={result.release_date}
+                    positive_ratings={result.positive_ratings}
+                    negative_ratings={result.negative_ratings}
+                  />
+                ))}
+              </SimpleGrid>
+            </Flex>
+          )}
+          <Flex direction="column" p={4} maxW="200px">
+            <Text fontSize="25px" fontWeight="bold" mb={2}>
+              {" "}
+              Filter by:
+            </Text>
+            <CheckboxGroup>
+              <Stack spacing={1}>
+                <Text fontSize="15px" fontStyle="oblique">
+                  Genres
+                </Text>
+                {filters.genres
+                  .filter((genre) =>
+                    searchResults.some((result) =>
+                      result.genres.includes(genre.label)
+                    )
+                  )
+                  .map((genre) => (
+                    <Checkbox
+                      key={genre.label}
+                      isChecked={genre.isChecked}
+                      onChange={() => handleGenreChange(genre.label)}
+                    >
+                      {genre.label}
+                    </Checkbox>
+                  ))}
+              </Stack>
+            </CheckboxGroup>
+            <CheckboxGroup>
+              <Stack spacing={1} mt={5}>
+                <Text fontSize="15px" fontStyle="oblique">
+                  Categories
+                </Text>
+                {filters.categories
+                  .filter((category) =>
+                    searchResults.some((result) =>
+                      result.categories.includes(category.label)
+                    )
+                  )
+                  .map((category) => (
+                    <Checkbox
+                      key={category.label}
+                      isChecked={category.isChecked}
+                      onChange={() => handleCategoryChange(category.label)}
+                    >
+                      {category.label}
+                    </Checkbox>
+                  ))}
+              </Stack>
+            </CheckboxGroup>
           </Flex>
-        )}
+        </Flex>
       </Flex>
     </MainLayout>
   );
