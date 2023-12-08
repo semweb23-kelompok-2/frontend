@@ -6,6 +6,7 @@ import {
   Img,
   Button,
   useDisclosure,
+  Box,
 } from "@chakra-ui/react";
 import { Player, BigPlayButton } from "video-react";
 import "node_modules/video-react/dist/video-react.css";
@@ -25,6 +26,8 @@ import { toTitleCase } from "@/utils/stringFormatter";
 import KukusanModal from "@/components/kukusan-modal";
 import { modalDataType, modalType } from "@/types/modal";
 import { processDetailFetchData } from "@/utils/apiProcessor";
+import { Icon } from "@iconify/react";
+import { getRatingName } from "@/utils/valueProcessor";
 
 function Detail() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -33,6 +36,10 @@ function Detail() {
   const [data, setData] = useState<GameDetailBinding>({} as GameDetailBinding);
   const modalControl = useDisclosure();
   const router = useRouter();
+
+  function handleBack() {
+    router.back();
+  }
 
   function handleModalType(type: modalType) {
     setModalType(type);
@@ -72,6 +79,11 @@ function Detail() {
     publisherHomepage: data?.publisherHomepage,
   };
 
+  const ratingName: string = getRatingName(
+    data.positive_ratings?.value,
+    data.negative_ratings?.value
+  );
+
   const contentScrollStyle = {
     "&::-webkit-scrollbar": {
       height: "4px",
@@ -104,9 +116,18 @@ function Detail() {
       ) : (
         <>
           <Flex
+            position="relative"
             flexDirection={{ base: "column", lg: "row" }}
             gap={{ base: "4", lg: "8" }}
           >
+            <Box
+              position="absolute"
+              left="-16"
+              cursor="pointer"
+              onClick={handleBack}
+            >
+              <Icon icon="formkit:arrowleft" color="white" />
+            </Box>
             <Img
               w={{ base: "full", lg: "calc(100vw / 3.2)" }}
               h="fit-content"
@@ -138,19 +159,13 @@ function Detail() {
                   }
                 >
                   {parseInt(data.req_age?.value) === 0
-                    ? "Semua umur"
-                    : `Umur ${data.req_age?.value}+`}
+                    ? "All ages"
+                    : `${data.req_age?.value}+`}
                 </BoxedText>
-                <TextWithIcon icon="prime:thumbs-up-fill">
-                  {data.positive_ratings?.value}
-                </TextWithIcon>
-                <TextWithIcon icon="prime:thumbs-down-fill">
-                  {data.negative_ratings?.value}
-                </TextWithIcon>
               </Flex>
               <Flex gap="8">
                 <Flex flexDirection="column" gap="2">
-                  <Text>This game is available on :</Text>
+                  <Text>Game is available on :</Text>
                   <Flex gap="4">
                     {(data.platforms?.value as string[]).map(
                       (platform: string) => (
@@ -159,6 +174,28 @@ function Detail() {
                         </BoxedText>
                       )
                     )}
+                  </Flex>
+                </Flex>
+                <Flex flexDirection="column" gap="2">
+                  <Text>Game rating :</Text>
+                  <Flex gap="4">
+                    <BoxedText
+                      bg={
+                        ratingName.includes("negative")
+                          ? "red.700"
+                          : ratingName.includes("positive")
+                          ? "green.700"
+                          : "yellow.500"
+                      }
+                    >
+                      {ratingName}
+                    </BoxedText>
+                    <TextWithIcon icon="prime:thumbs-up-fill">
+                      {data.positive_ratings?.value}
+                    </TextWithIcon>
+                    <TextWithIcon icon="prime:thumbs-down-fill">
+                      {data.negative_ratings?.value}
+                    </TextWithIcon>
                   </Flex>
                 </Flex>
               </Flex>
